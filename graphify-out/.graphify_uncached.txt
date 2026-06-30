@@ -1,0 +1,11 @@
+/home/lviffy/Projects/Stellar-ZK/ADR.md
+/home/lviffy/Projects/Stellar-ZK/README.md
+/home/lviffy/Projects/Stellar-ZK/TRD.md
+/home/lviffy/Projects/Stellar-ZK/frontend/AGENTS.md
+/home/lviffy/Projects/Stellar-ZK/frontend/CLAUDE.md
+/home/lviffy/Projects/Stellar-ZK/frontend/README.md
+/home/lviffy/Projects/Stellar-ZK/frontend/public/file.svg
+/home/lviffy/Projects/Stellar-ZK/frontend/public/globe.svg
+/home/lviffy/Projects/Stellar-ZK/frontend/public/next.svg
+/home/lviffy/Projects/Stellar-ZK/frontend/public/vercel.svg
+/home/lviffy/Projects/Stellar-ZK/frontend/public/window.svg
