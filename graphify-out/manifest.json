@@ -93,5 +93,730 @@
     "mtime": 1782803623.9044878,
     "ast_hash": "a2760511c65806022ad20adf74370ff3",
     "semantic_hash": "a2760511c65806022ad20adf74370ff3"
+  },
+  "circuits/circom/voting/generate_proof.js": {
+    "mtime": 1782808048.7840705,
+    "ast_hash": "b33906de8102e5a8f4dac3a6ff2ec18c",
+    "semantic_hash": "b33906de8102e5a8f4dac3a6ff2ec18c"
+  },
+  "circuits/circom/voting/verification_key.json": {
+    "mtime": 1782807943.7028918,
+    "ast_hash": "87d5aa27b3d6db0d229a515c8367a637",
+    "semantic_hash": "87d5aa27b3d6db0d229a515c8367a637"
+  },
+  "circuits/circom/voting/voting_js/generate_witness.js": {
+    "mtime": 1782807929.9720097,
+    "ast_hash": "3d3f2e420d8b6462de9af8bbddb463d8",
+    "semantic_hash": "3d3f2e420d8b6462de9af8bbddb463d8"
+  },
+  "circuits/circom/voting/voting_js/witness_calculator.js": {
+    "mtime": 1782807929.9730096,
+    "ast_hash": "8b138bc8024c9366fb5f7fb0a8164260",
+    "semantic_hash": "8b138bc8024c9366fb5f7fb0a8164260"
+  },
+  "circuits/lib/merkle/.release-please-manifest.json": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "ffee672f7e153206504767dc8e5cdf60",
+    "semantic_hash": "ffee672f7e153206504767dc8e5cdf60"
+  },
+  "circuits/lib/merkle/release-please-config.json": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "f514732152a65ad4f4e7fed71ab7faf4",
+    "semantic_hash": "f514732152a65ad4f4e7fed71ab7faf4"
+  },
+  "circuits/lib/merkle/scripts/build-brillig-report.sh": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "9a97cc6f21d7fdf8b52d7ed7612f10ec",
+    "semantic_hash": "9a97cc6f21d7fdf8b52d7ed7612f10ec"
+  },
+  "circuits/lib/merkle/scripts/build-gates-report.sh": {
+    "mtime": 1782805710.9783516,
+    "ast_hash": "8f732c26a0063bb7062f506b5bae48a6",
+    "semantic_hash": "8f732c26a0063bb7062f506b5bae48a6"
+  },
+  "circuits/lib/merkle/tests/differential.rs": {
+    "mtime": 1782805710.9785178,
+    "ast_hash": "7e3299368b690dad77f13e93caf0c7cb",
+    "semantic_hash": "7e3299368b690dad77f13e93caf0c7cb"
+  },
+  "circuits/lib/poseidon/.release-please-manifest.json": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "3eb728c3ca9d46b263efdb240fe64e9c",
+    "semantic_hash": "3eb728c3ca9d46b263efdb240fe64e9c"
+  },
+  "circuits/lib/poseidon/oracle_server.ts": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "78e2dffe6c15fd4cbde1d97646fb0a8d",
+    "semantic_hash": "78e2dffe6c15fd4cbde1d97646fb0a8d"
+  },
+  "circuits/lib/poseidon/package.json": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "597a9fcb870a757ad9584aac9c29e719",
+    "semantic_hash": "597a9fcb870a757ad9584aac9c29e719"
+  },
+  "circuits/lib/poseidon/release-please-config.json": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "f514732152a65ad4f4e7fed71ab7faf4",
+    "semantic_hash": "f514732152a65ad4f4e7fed71ab7faf4"
+  },
+  "circuits/lib/poseidon/scripts/build-brillig-report.sh": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "b043077643aad05f58ad04d5810618b7",
+    "semantic_hash": "b043077643aad05f58ad04d5810618b7"
+  },
+  "circuits/lib/poseidon/scripts/build-gates-report.sh": {
+    "mtime": 1782805782.7621384,
+    "ast_hash": "bc714dae1e47ebda4d805b2c898f1da8",
+    "semantic_hash": "bc714dae1e47ebda4d805b2c898f1da8"
+  },
+  "circuits/lib/poseidon/scripts/run.sh": {
+    "mtime": 1782805782.7621384,
+    "ast_hash": "75831cf7179c787a543783e79b3970a3",
+    "semantic_hash": "75831cf7179c787a543783e79b3970a3"
+  },
+  "circuits/lib/poseidon/tsconfig.json": {
+    "mtime": 1782805782.7687943,
+    "ast_hash": "a050887b085434b88c087ceb57e13907",
+    "semantic_hash": "a050887b085434b88c087ceb57e13907"
+  },
+  "circuits/payroll_guest/src/main.rs": {
+    "mtime": 1782806913.4072523,
+    "ast_hash": "5fcb50dc08e56cc6b7849c52120d2ba4",
+    "semantic_hash": "5fcb50dc08e56cc6b7849c52120d2ba4"
+  },
+  "contracts/private_governance/src/lib.rs": {
+    "mtime": 1782808634.338168,
+    "ast_hash": "29109e72f20796ce73f1faddec7379f6",
+    "semantic_hash": "29109e72f20796ce73f1faddec7379f6"
+  },
+  "contracts/private_governance/src/test.rs": {
+    "mtime": 1782808677.1490247,
+    "ast_hash": "986e143ff408d5de40522703fe026309",
+    "semantic_hash": "986e143ff408d5de40522703fe026309"
+  },
+  "contracts/private_governance/test_snapshots/test/test_double_vote_rejected.1.json": {
+    "mtime": 1782808666.0000615,
+    "ast_hash": "f45022c4f1f688189056ac2563eda77b",
+    "semantic_hash": "f45022c4f1f688189056ac2563eda77b"
+  },
+  "contracts/private_governance/test_snapshots/test/test_has_voted_false_initially.1.json": {
+    "mtime": 1782808665.9970615,
+    "ast_hash": "81249643e32b8fa6001d34df91119036",
+    "semantic_hash": "81249643e32b8fa6001d34df91119036"
+  },
+  "contracts/private_governance/test_snapshots/test/test_invalid_vote_choice_rejected.1.json": {
+    "mtime": 1782808665.9970615,
+    "ast_hash": "81249643e32b8fa6001d34df91119036",
+    "semantic_hash": "81249643e32b8fa6001d34df91119036"
+  },
+  "contracts/private_governance/test_snapshots/test/test_tally_initial_is_zero.1.json": {
+    "mtime": 1782808665.9990616,
+    "ast_hash": "81249643e32b8fa6001d34df91119036",
+    "semantic_hash": "81249643e32b8fa6001d34df91119036"
+  },
+  "contracts/private_treasury/src/lib.rs": {
+    "mtime": 1782807074.5698948,
+    "ast_hash": "d6a5b0ef1491c29778a32ae772156da8",
+    "semantic_hash": "d6a5b0ef1491c29778a32ae772156da8"
+  },
+  "contracts/zk_credential/src/lib.rs": {
+    "mtime": 1782807815.6110966,
+    "ast_hash": "7541b841357c68d9f2d5b496af0272e4",
+    "semantic_hash": "7541b841357c68d9f2d5b496af0272e4"
+  },
+  "lib/rs-soroban-ultrahonk/circuits/scripts/build_all.sh": {
+    "mtime": 1782807152.9001029,
+    "ast_hash": "00a4b2507e25eba929a3480b4cbeeb66",
+    "semantic_hash": "00a4b2507e25eba929a3480b4cbeeb66"
+  },
+  "lib/rs-soroban-ultrahonk/circuits/scripts/build_one.sh": {
+    "mtime": 1782807152.9002123,
+    "ast_hash": "4d4f91ad95fd51fa0a525f98e37cb123",
+    "semantic_hash": "4d4f91ad95fd51fa0a525f98e37cb123"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/identity/src/lib.rs": {
+    "mtime": 1782807152.9005704,
+    "ast_hash": "7401fb30a1607f6e3ccb23f892e68152",
+    "semantic_hash": "7401fb30a1607f6e3ccb23f892e68152"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/identity/tests/identity.rs": {
+    "mtime": 1782807152.9005704,
+    "ast_hash": "cf7e1a4f0583b8d8242f967ca27aacd7",
+    "semantic_hash": "cf7e1a4f0583b8d8242f967ca27aacd7"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/rs-soroban-ultrahonk/src/lib.rs": {
+    "mtime": 1782807152.9007592,
+    "ast_hash": "683ba919e2910220008404caf12b7f69",
+    "semantic_hash": "683ba919e2910220008404caf12b7f69"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/rs-soroban-ultrahonk/tests/integration_tests.rs": {
+    "mtime": 1782807152.9007592,
+    "ast_hash": "7643a4211e461b2f70a1fced7c979f32",
+    "semantic_hash": "7643a4211e461b2f70a1fced7c979f32"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/contracts/examples/populate_publics.rs": {
+    "mtime": 1782807152.90097,
+    "ast_hash": "8e06d83700dd0a26ef0f4771ce6ce3f5",
+    "semantic_hash": "8e06d83700dd0a26ef0f4771ce6ce3f5"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/contracts/lib.rs": {
+    "mtime": 1782807152.90097,
+    "ast_hash": "7d1cf9ca3ef468a0fdfa8f8b366fcb5f",
+    "semantic_hash": "7d1cf9ca3ef468a0fdfa8f8b366fcb5f"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/contracts/src/mixer.rs": {
+    "mtime": 1782807152.90097,
+    "ast_hash": "d5ac048ffc4b4035afdaf6ab4c8ff11e",
+    "semantic_hash": "d5ac048ffc4b4035afdaf6ab4c8ff11e"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/contracts/tests/mixer.rs": {
+    "mtime": 1782807152.90097,
+    "ast_hash": "2cec5f1b32ce5dbac1e5f75ffc1455b8",
+    "semantic_hash": "2cec5f1b32ce5dbac1e5f75ffc1455b8"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/contracts/tests/verifier.rs": {
+    "mtime": 1782807152.9011796,
+    "ast_hash": "1c13b501fe334f4c822c79f8e25f3ad1",
+    "semantic_hash": "1c13b501fe334f4c822c79f8e25f3ad1"
+  },
+  "lib/rs-soroban-ultrahonk/crates/test-utils/src/lib.rs": {
+    "mtime": 1782807152.9012883,
+    "ast_hash": "ea726e114a678c125502ab5f16a87c15",
+    "semantic_hash": "ea726e114a678c125502ab5f16a87c15"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/debug.rs": {
+    "mtime": 1782807152.9013615,
+    "ast_hash": "f0f83212f3d449f3510de7005e13862a",
+    "semantic_hash": "f0f83212f3d449f3510de7005e13862a"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/ec.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "722222644cb2255397a5ba15fdb66e65",
+    "semantic_hash": "722222644cb2255397a5ba15fdb66e65"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/field.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "7fcb8f1fa58fe2e37860ec3cbbd11f6b",
+    "semantic_hash": "7fcb8f1fa58fe2e37860ec3cbbd11f6b"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/hash.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "ef0e560ad288736992a07663b0f0e557",
+    "semantic_hash": "ef0e560ad288736992a07663b0f0e557"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/lib.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "9a168298330dd4414bf829e6ff9bef16",
+    "semantic_hash": "9a168298330dd4414bf829e6ff9bef16"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/relations.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "dedaef516799900e805af9e7c91eac49",
+    "semantic_hash": "dedaef516799900e805af9e7c91eac49"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/shplemini.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "f5f1e6c4d63fdeb8fc26c4a1ac87b051",
+    "semantic_hash": "f5f1e6c4d63fdeb8fc26c4a1ac87b051"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/sumcheck.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "861202c16e3c9d136423f48c361205f3",
+    "semantic_hash": "861202c16e3c9d136423f48c361205f3"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/transcript.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "fa4df8f5a5ad282a270db96d7128502b",
+    "semantic_hash": "fa4df8f5a5ad282a270db96d7128502b"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/types.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "cf91bba23882ef21b1da2d6f28c434b8",
+    "semantic_hash": "cf91bba23882ef21b1da2d6f28c434b8"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/utils.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "192afef43f99ad857ad046c6bfc74bc6",
+    "semantic_hash": "192afef43f99ad857ad046c6bfc74bc6"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/src/verifier.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "523e32f86901e192943e3275d5797c7a",
+    "semantic_hash": "523e32f86901e192943e3275d5797c7a"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/tests/negative_tests.rs": {
+    "mtime": 1782807152.9015439,
+    "ast_hash": "6d1d73a5ee51866317a197c0b5bd4fb3",
+    "semantic_hash": "6d1d73a5ee51866317a197c0b5bd4fb3"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/tests/verifier_test.rs": {
+    "mtime": 1782807152.9021015,
+    "ast_hash": "cf591873080813eb62e289a97e2475b2",
+    "semantic_hash": "cf591873080813eb62e289a97e2475b2"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/config.sh": {
+    "mtime": 1782807152.9021015,
+    "ast_hash": "15d6c4a103195626bea99bb94e34c636",
+    "semantic_hash": "15d6c4a103195626bea99bb94e34c636"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/deploy.sh": {
+    "mtime": 1782807152.9022102,
+    "ast_hash": "2837ffdad04642619ad0f202c79582d6",
+    "semantic_hash": "2837ffdad04642619ad0f202c79582d6"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/fund_account.sh": {
+    "mtime": 1782807152.9022102,
+    "ast_hash": "a2be201f63d17349926484632afd918b",
+    "semantic_hash": "a2be201f63d17349926484632afd918b"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_identity/invoke_identity.ts": {
+    "mtime": 1782807152.9022102,
+    "ast_hash": "d21062c8213ff197824d13d1e3968704",
+    "semantic_hash": "d21062c8213ff197824d13d1e3968704"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_identity/package.json": {
+    "mtime": 1782807152.9023173,
+    "ast_hash": "b04706704ba12706be606eb3cdd406fe",
+    "semantic_hash": "b04706704ba12706be606eb3cdd406fe"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_ultrahonk/invoke_ultrahonk.ts": {
+    "mtime": 1782807152.9023876,
+    "ast_hash": "7dcd7b557e0db8487f10703585e1f470",
+    "semantic_hash": "7dcd7b557e0db8487f10703585e1f470"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_ultrahonk/package.json": {
+    "mtime": 1782807152.9023876,
+    "ast_hash": "6be0b236d134e82d7a753cdc2f0f17dd",
+    "semantic_hash": "6be0b236d134e82d7a753cdc2f0f17dd"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_ultrahonk/tsconfig.json": {
+    "mtime": 1782807152.9023876,
+    "ast_hash": "e5bd0b00c48e9cd547e5888c7e9bc515",
+    "semantic_hash": "e5bd0b00c48e9cd547e5888c7e9bc515"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/measure_ultrahonk_costs/measure_ultrahonk_costs.ts": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "e5d0d77be8a14daad66b3cfa1382f4dc",
+    "semantic_hash": "e5d0d77be8a14daad66b3cfa1382f4dc"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/measure_ultrahonk_costs/package.json": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "88dbb113a4ae31a4f411c575a1642a69",
+    "semantic_hash": "88dbb113a4ae31a4f411c575a1642a69"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/measure_ultrahonk_costs/tsconfig.json": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "6c29b1dc6370d84437428b6062e02614",
+    "semantic_hash": "6c29b1dc6370d84437428b6062e02614"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/run_identity_e2e.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "bb18753007b98d669812d59d1086c7a3",
+    "semantic_hash": "bb18753007b98d669812d59d1086c7a3"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/run_localnet_e2e.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "ad9867a5a82b5f49992c2513e1fe141d",
+    "semantic_hash": "ad9867a5a82b5f49992c2513e1fe141d"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/run_testnet_e2e.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "9baf76d95551cf702941cb4e5316a0f6",
+    "semantic_hash": "9baf76d95551cf702941cb4e5316a0f6"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/setup.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "c3db97e64de3a254375d1220e6deeaa6",
+    "semantic_hash": "c3db97e64de3a254375d1220e6deeaa6"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/start_stellar.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "eea4282f47460ff918fc69946a20e2cd",
+    "semantic_hash": "eea4282f47460ff918fc69946a20e2cd"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/stop_stellar.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "61de38f7ff883ffd352cb8860567e1a8",
+    "semantic_hash": "61de38f7ff883ffd352cb8860567e1a8"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/verify.sh": {
+    "mtime": 1782807152.902633,
+    "ast_hash": "3cafbe260a6278ca939ef378572f7120",
+    "semantic_hash": "3cafbe260a6278ca939ef378572f7120"
+  },
+  "lib/stellar-risc0-verifier/.githooks/pre-push": {
+    "mtime": 1782807245.3976731,
+    "ast_hash": "919ec1b688090105620cfa37f44c24b8",
+    "semantic_hash": "919ec1b688090105620cfa37f44c24b8"
+  },
+  "lib/stellar-risc0-verifier/contracts/emergency-stop/src/lib.rs": {
+    "mtime": 1782807245.399283,
+    "ast_hash": "052c9d4dd6c99a2d67ad4d1b2944e007",
+    "semantic_hash": "052c9d4dd6c99a2d67ad4d1b2944e007"
+  },
+  "lib/stellar-risc0-verifier/contracts/emergency-stop/src/test.rs": {
+    "mtime": 1782807245.3993459,
+    "ast_hash": "6243e61b4febdc9d9c90890b7ed06fda",
+    "semantic_hash": "6243e61b4febdc9d9c90890b7ed06fda"
+  },
+  "lib/stellar-risc0-verifier/contracts/groth16-verifier/build.rs": {
+    "mtime": 1782807245.399433,
+    "ast_hash": "fa6ac37ac2a1588612f49e3f470c6da4",
+    "semantic_hash": "fa6ac37ac2a1588612f49e3f470c6da4"
+  },
+  "lib/stellar-risc0-verifier/contracts/groth16-verifier/parameters.json": {
+    "mtime": 1782807245.399433,
+    "ast_hash": "9d43dab4709eb19ec91502cda71a580e",
+    "semantic_hash": "9d43dab4709eb19ec91502cda71a580e"
+  },
+  "lib/stellar-risc0-verifier/contracts/groth16-verifier/src/lib.rs": {
+    "mtime": 1782807245.399433,
+    "ast_hash": "745bfb2fa7ca7c81d2d60da9771040f5",
+    "semantic_hash": "745bfb2fa7ca7c81d2d60da9771040f5"
+  },
+  "lib/stellar-risc0-verifier/contracts/groth16-verifier/src/test.rs": {
+    "mtime": 1782807245.3995917,
+    "ast_hash": "a0e5b35bc1e019da974753665c4c572c",
+    "semantic_hash": "a0e5b35bc1e019da974753665c4c572c"
+  },
+  "lib/stellar-risc0-verifier/contracts/groth16-verifier/src/types.rs": {
+    "mtime": 1782807245.3995917,
+    "ast_hash": "a842c8a5db98fb45f8e9265a1bd9cd61",
+    "semantic_hash": "a842c8a5db98fb45f8e9265a1bd9cd61"
+  },
+  "lib/stellar-risc0-verifier/contracts/interface/src/lib.rs": {
+    "mtime": 1782807245.3997304,
+    "ast_hash": "60c9d0e9714e974dac63ebf311e043e0",
+    "semantic_hash": "60c9d0e9714e974dac63ebf311e043e0"
+  },
+  "lib/stellar-risc0-verifier/contracts/interface/src/types.rs": {
+    "mtime": 1782807245.3997958,
+    "ast_hash": "631c4ea551d644b37b13b38267844312",
+    "semantic_hash": "631c4ea551d644b37b13b38267844312"
+  },
+  "lib/stellar-risc0-verifier/contracts/mock-verifier/src/lib.rs": {
+    "mtime": 1782807245.3999062,
+    "ast_hash": "902d2c05ddac6ab2cc493fc6ca38e196",
+    "semantic_hash": "902d2c05ddac6ab2cc493fc6ca38e196"
+  },
+  "lib/stellar-risc0-verifier/contracts/mock-verifier/src/test.rs": {
+    "mtime": 1782807245.3999672,
+    "ast_hash": "b49b6b30700a7155413f49b4b7055a0b",
+    "semantic_hash": "b49b6b30700a7155413f49b4b7055a0b"
+  },
+  "lib/stellar-risc0-verifier/contracts/risc0-router/src/lib.rs": {
+    "mtime": 1782807245.400047,
+    "ast_hash": "9ac1d774962039ab1511aa7948c3dce3",
+    "semantic_hash": "9ac1d774962039ab1511aa7948c3dce3"
+  },
+  "lib/stellar-risc0-verifier/contracts/risc0-router/src/test.rs": {
+    "mtime": 1782807245.40011,
+    "ast_hash": "4cd8767bcefed9e66521574d709166fd",
+    "semantic_hash": "4cd8767bcefed9e66521574d709166fd"
+  },
+  "lib/stellar-risc0-verifier/contracts/timelock/src/lib.rs": {
+    "mtime": 1782807245.4002128,
+    "ast_hash": "a9e25ce376357ffd397326c49d053c4a",
+    "semantic_hash": "a9e25ce376357ffd397326c49d053c4a"
+  },
+  "lib/stellar-risc0-verifier/contracts/timelock/src/test.rs": {
+    "mtime": 1782807245.4003048,
+    "ast_hash": "b072309f299c602ac56b0ae91f798271",
+    "semantic_hash": "b072309f299c602ac56b0ae91f798271"
+  },
+  "lib/stellar-risc0-verifier/scripts/commands/deploy.sh": {
+    "mtime": 1782807245.4010923,
+    "ast_hash": "f591fa839d792b4bd63d0f10f19ba37c",
+    "semantic_hash": "f591fa839d792b4bd63d0f10f19ba37c"
+  },
+  "lib/stellar-risc0-verifier/scripts/commands/self_admin.sh": {
+    "mtime": 1782807245.4011524,
+    "ast_hash": "fba24ed0507ca8d4af520d30c32a59cc",
+    "semantic_hash": "fba24ed0507ca8d4af520d30c32a59cc"
+  },
+  "lib/stellar-risc0-verifier/scripts/commands/utility.sh": {
+    "mtime": 1782807245.4011524,
+    "ast_hash": "5167159e8c29c0ca32ce55f0727fca20",
+    "semantic_hash": "5167159e8c29c0ca32ce55f0727fca20"
+  },
+  "lib/stellar-risc0-verifier/scripts/commands/verifier_management.sh": {
+    "mtime": 1782807245.4011524,
+    "ast_hash": "6aa10e237a960e3d5397b4dde4017d9b",
+    "semantic_hash": "6aa10e237a960e3d5397b4dde4017d9b"
+  },
+  "lib/stellar-risc0-verifier/scripts/lib.sh": {
+    "mtime": 1782807245.4013314,
+    "ast_hash": "9915ff205070f66facb8335da0268374",
+    "semantic_hash": "9915ff205070f66facb8335da0268374"
+  },
+  "lib/stellar-risc0-verifier/scripts/manage.sh": {
+    "mtime": 1782807245.4013314,
+    "ast_hash": "98bc6029f091ed297fb695e0073176c4",
+    "semantic_hash": "98bc6029f091ed297fb695e0073176c4"
+  },
+  "lib/stellar-risc0-verifier/scripts/toml_helper.py": {
+    "mtime": 1782807245.4013314,
+    "ast_hash": "b46fb98a62190bd8a5ed38296bd9c53c",
+    "semantic_hash": "b46fb98a62190bd8a5ed38296bd9c53c"
+  },
+  "lib/stellar-risc0-verifier/tools/build-utils/src/lib.rs": {
+    "mtime": 1782807245.4015558,
+    "ast_hash": "fe62893d7e89ccf34114c024579a015a",
+    "semantic_hash": "fe62893d7e89ccf34114c024579a015a"
+  },
+  "package.json": {
+    "mtime": 1782808027.1022294,
+    "ast_hash": "8d757dba33477d8e9828daf17edebaba",
+    "semantic_hash": "8d757dba33477d8e9828daf17edebaba"
+  },
+  "circuits/lib/merkle/.github/NIGHTLY_CANARY_DIED.md": {
+    "mtime": 1782805710.97782,
+    "ast_hash": "1cabf31a6076e3cd1bd32b67bc17f93e",
+    "semantic_hash": "1cabf31a6076e3cd1bd32b67bc17f93e"
+  },
+  "circuits/lib/merkle/.github/workflows/benchmark.yml": {
+    "mtime": 1782805710.978049,
+    "ast_hash": "e24e8dfc42df7994f2d01ec23907893e",
+    "semantic_hash": "e24e8dfc42df7994f2d01ec23907893e"
+  },
+  "circuits/lib/merkle/.github/workflows/nightly-canary.yml": {
+    "mtime": 1782805710.9780817,
+    "ast_hash": "ef659f8b1c59376152a4a20bec0a49e8",
+    "semantic_hash": "ef659f8b1c59376152a4a20bec0a49e8"
+  },
+  "circuits/lib/merkle/.github/workflows/pull-request-title.yml": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "2570bdb83c5cda30ae685048cd043554",
+    "semantic_hash": "2570bdb83c5cda30ae685048cd043554"
+  },
+  "circuits/lib/merkle/.github/workflows/release.yml": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "c330b97a2825850785a606320af63c38",
+    "semantic_hash": "c330b97a2825850785a606320af63c38"
+  },
+  "circuits/lib/merkle/.github/workflows/test.yml": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "07ef74616b78e7ff10d4fcf4706090e3",
+    "semantic_hash": "07ef74616b78e7ff10d4fcf4706090e3"
+  },
+  "circuits/lib/merkle/CONTRIBUTING.md": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "d4f499b5fb4fbb331d5e725a0a9d356c",
+    "semantic_hash": "d4f499b5fb4fbb331d5e725a0a9d356c"
+  },
+  "circuits/lib/merkle/README.md": {
+    "mtime": 1782805710.9780993,
+    "ast_hash": "615f324abbae48fc6029d255cb6e5d2b",
+    "semantic_hash": "615f324abbae48fc6029d255cb6e5d2b"
+  },
+  "circuits/lib/poseidon/.github/NIGHTLY_CANARY_DIED.md": {
+    "mtime": 1782805782.7614064,
+    "ast_hash": "585d0393460deadc379afb0dd061c865",
+    "semantic_hash": "585d0393460deadc379afb0dd061c865"
+  },
+  "circuits/lib/poseidon/.github/workflows/benchmark.yml": {
+    "mtime": 1782805782.761482,
+    "ast_hash": "e63cd8749c59d454f1687e0c3f38027a",
+    "semantic_hash": "e63cd8749c59d454f1687e0c3f38027a"
+  },
+  "circuits/lib/poseidon/.github/workflows/nightly-canary.yml": {
+    "mtime": 1782805782.7615373,
+    "ast_hash": "13ec75c5a00077be6d2e8d9b7f7d8d7a",
+    "semantic_hash": "13ec75c5a00077be6d2e8d9b7f7d8d7a"
+  },
+  "circuits/lib/poseidon/.github/workflows/pull-request-title.yml": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "2570bdb83c5cda30ae685048cd043554",
+    "semantic_hash": "2570bdb83c5cda30ae685048cd043554"
+  },
+  "circuits/lib/poseidon/.github/workflows/release.yml": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "e4eaaf293f2ea11bbfa095ae73416073",
+    "semantic_hash": "e4eaaf293f2ea11bbfa095ae73416073"
+  },
+  "circuits/lib/poseidon/.github/workflows/test.yml": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "85364cd31d0e31cb598cd6e1669cfea0",
+    "semantic_hash": "85364cd31d0e31cb598cd6e1669cfea0"
+  },
+  "circuits/lib/poseidon/CHANGELOG.md": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "8ea121c2214c40a2847c08bf70f5fb7a",
+    "semantic_hash": "8ea121c2214c40a2847c08bf70f5fb7a"
+  },
+  "circuits/lib/poseidon/CONTRIBUTING.md": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "85f81eb2574d235df913dcfd5788ea96",
+    "semantic_hash": "85f81eb2574d235df913dcfd5788ea96"
+  },
+  "circuits/lib/poseidon/README.md": {
+    "mtime": 1782805782.7615926,
+    "ast_hash": "add40c23471542d1732bb16fd9ecbdc3",
+    "semantic_hash": "add40c23471542d1732bb16fd9ecbdc3"
+  },
+  "lib/rs-soroban-ultrahonk/.github/workflows/ci.yml": {
+    "mtime": 1782807152.8991776,
+    "ast_hash": "d09deb073e4ab550a2c5ae0e97975499",
+    "semantic_hash": "d09deb073e4ab550a2c5ae0e97975499"
+  },
+  "lib/rs-soroban-ultrahonk/.github/workflows/e2e.yml": {
+    "mtime": 1782807152.8992841,
+    "ast_hash": "af9524029e8cc822477492a89c976e0a",
+    "semantic_hash": "af9524029e8cc822477492a89c976e0a"
+  },
+  "lib/rs-soroban-ultrahonk/.github/workflows/testnet.yml": {
+    "mtime": 1782807152.8992841,
+    "ast_hash": "6749004da9c0a7523201a8972655a7e1",
+    "semantic_hash": "6749004da9c0a7523201a8972655a7e1"
+  },
+  "lib/rs-soroban-ultrahonk/README.md": {
+    "mtime": 1782807152.8992841,
+    "ast_hash": "c9e59c6a6d1e32fa35b41f64a5ef474c",
+    "semantic_hash": "c9e59c6a6d1e32fa35b41f64a5ef474c"
+  },
+  "lib/rs-soroban-ultrahonk/circuits/README.md": {
+    "mtime": 1782807152.8992841,
+    "ast_hash": "601a37ce5a80437321f74b82d0f4ee23",
+    "semantic_hash": "601a37ce5a80437321f74b82d0f4ee23"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/identity/README.md": {
+    "mtime": 1782807152.9005704,
+    "ast_hash": "9f6ecafd253785b4be481e930132fb85",
+    "semantic_hash": "9f6ecafd253785b4be481e930132fb85"
+  },
+  "lib/rs-soroban-ultrahonk/contracts/tornado_classic/README.md": {
+    "mtime": 1782807152.9007592,
+    "ast_hash": "f680eff500175ecf273bc80f9987724e",
+    "semantic_hash": "f680eff500175ecf273bc80f9987724e"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/README.md": {
+    "mtime": 1782807152.9013615,
+    "ast_hash": "76d8b8db4488309b09b6543dd96a9676",
+    "semantic_hash": "76d8b8db4488309b09b6543dd96a9676"
+  },
+  "lib/rs-soroban-ultrahonk/crates/ultrahonk-soroban-verifier/VERIFIER_PROVENANCE.md": {
+    "mtime": 1782807152.9013615,
+    "ast_hash": "95e7bef47ba4e37558b229fccecf9bb5",
+    "semantic_hash": "95e7bef47ba4e37558b229fccecf9bb5"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/invoke_ultrahonk/README.md": {
+    "mtime": 1782807152.9023173,
+    "ast_hash": "e0d9ca60d524a1f837aa6f19c69236f7",
+    "semantic_hash": "e0d9ca60d524a1f837aa6f19c69236f7"
+  },
+  "lib/rs-soroban-ultrahonk/scripts/measure_ultrahonk_costs/README.md": {
+    "mtime": 1782807152.9023876,
+    "ast_hash": "919b935d5fb6c445d7de649475bd881c",
+    "semantic_hash": "919b935d5fb6c445d7de649475bd881c"
+  },
+  "lib/stellar-risc0-verifier/.github/PULL_REQUEST_TEMPLATE/bugfix.md": {
+    "mtime": 1782807245.398074,
+    "ast_hash": "5eebc4f7cdbd51150f7cb3fefdb9ac27",
+    "semantic_hash": "5eebc4f7cdbd51150f7cb3fefdb9ac27"
+  },
+  "lib/stellar-risc0-verifier/.github/PULL_REQUEST_TEMPLATE/choose.md": {
+    "mtime": 1782807245.398124,
+    "ast_hash": "9342112b8551942d91167feed0e342f0",
+    "semantic_hash": "9342112b8551942d91167feed0e342f0"
+  },
+  "lib/stellar-risc0-verifier/.github/PULL_REQUEST_TEMPLATE/feature.md": {
+    "mtime": 1782807245.398124,
+    "ast_hash": "a437dfa6684e280fc3a8aba339310b89",
+    "semantic_hash": "a437dfa6684e280fc3a8aba339310b89"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/build-and-test.yml": {
+    "mtime": 1782807245.398124,
+    "ast_hash": "538d3c536143a4cebfedd7c474956980",
+    "semantic_hash": "538d3c536143a4cebfedd7c474956980"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/coverage-pr.yml": {
+    "mtime": 1782807245.398225,
+    "ast_hash": "cb33f8e092c1df5a12b5526a1de0e1a4",
+    "semantic_hash": "cb33f8e092c1df5a12b5526a1de0e1a4"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/coverage.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "ad3583aee6d7cf1fe326b65513336da3",
+    "semantic_hash": "ad3583aee6d7cf1fe326b65513336da3"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/dependency-audit.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "d0b1f8b2398aa009e9fd5fa59c5f9df9",
+    "semantic_hash": "d0b1f8b2398aa009e9fd5fa59c5f9df9"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/docs.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "389e79564fe55ae6f1e3c663dff35c5d",
+    "semantic_hash": "389e79564fe55ae6f1e3c663dff35c5d"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/gas-benchmark.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "33e96058513a4f8d4198449a33d6a798",
+    "semantic_hash": "33e96058513a4f8d4198449a33d6a798"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/linter.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "27c9cc914050673e7cdce796470ee169",
+    "semantic_hash": "27c9cc914050673e7cdce796470ee169"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/semver-checks.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "70028709463e22c1a3f3ca63ff2b73a7",
+    "semantic_hash": "70028709463e22c1a3f3ca63ff2b73a7"
+  },
+  "lib/stellar-risc0-verifier/.github/workflows/ub-detection.yml": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "f9dcec686383d6e2207cb841a3db0e1c",
+    "semantic_hash": "f9dcec686383d6e2207cb841a3db0e1c"
+  },
+  "lib/stellar-risc0-verifier/CONTRIBUTING.md": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "129ada36dfad3d67184c801eda9a3ebd",
+    "semantic_hash": "129ada36dfad3d67184c801eda9a3ebd"
+  },
+  "lib/stellar-risc0-verifier/README.md": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "cdae4f804f7e5b7a37b1b8b8c97db1f8",
+    "semantic_hash": "cdae4f804f7e5b7a37b1b8b8c97db1f8"
+  },
+  "lib/stellar-risc0-verifier/SECURITY.md": {
+    "mtime": 1782807245.3982704,
+    "ast_hash": "df84e21f8c54b9b0ecad07fdacdfe54f",
+    "semantic_hash": "df84e21f8c54b9b0ecad07fdacdfe54f"
+  },
+  "lib/stellar-risc0-verifier/docs/README.md": {
+    "mtime": 1782807245.4003048,
+    "ast_hash": "ccfffee69fc34fdb6fb81263a2facd4a",
+    "semantic_hash": "ccfffee69fc34fdb6fb81263a2facd4a"
+  },
+  "lib/stellar-risc0-verifier/docs/architecture.md": {
+    "mtime": 1782807245.4004793,
+    "ast_hash": "fb0c6faf9039c87565c397baecbfb77c",
+    "semantic_hash": "fb0c6faf9039c87565c397baecbfb77c"
+  },
+  "lib/stellar-risc0-verifier/docs/upgrading-groth16-verifier.md": {
+    "mtime": 1782807245.4004793,
+    "ast_hash": "999b05c1f39599c9e4e4e6a5fa9020b8",
+    "semantic_hash": "999b05c1f39599c9e4e4e6a5fa9020b8"
+  },
+  "lib/stellar-risc0-verifier/docs/verifying-risc0-proofs.md": {
+    "mtime": 1782807245.4005592,
+    "ast_hash": "db7758901d215baf75084280d5f23e2d",
+    "semantic_hash": "db7758901d215baf75084280d5f23e2d"
+  },
+  "lib/stellar-risc0-verifier/scripts/README.md": {
+    "mtime": 1782807245.4005592,
+    "ast_hash": "9ce51717bc358d65c2bce4688cad86d9",
+    "semantic_hash": "9ce51717bc358d65c2bce4688cad86d9"
+  },
+  "plan.md": {
+    "mtime": 1782805210.7826529,
+    "ast_hash": "ffdd34fdc3847ab08287af44e193b455",
+    "semantic_hash": "ffdd34fdc3847ab08287af44e193b455"
+  },
+  "task.md": {
+    "mtime": 1782808691.0629795,
+    "ast_hash": "2e3cfd08001beb7ac3aca5b0cdc801c5",
+    "semantic_hash": "2e3cfd08001beb7ac3aca5b0cdc801c5"
   }
 }
