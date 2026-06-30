@@ -1,0 +1,30 @@
+# Stellar Shield Tasks
+
+- `[x]` Step 0: Setup & Workspace Initialization
+    - `[x]` Create directories (`contracts/`, `circuits/`)
+    - `[x]` Create Cargo workspace `Cargo.toml`
+- `[x]` Step 1: Noir & Credentials Flow (0-12h)
+    - `[x]` Initialize Noir project `circuits/noir/credential`
+    - `[x]` Write credential circuit (`main.nr`)
+    - `[x]` Write `zk_credential` Soroban contract in Rust
+    - `[x]` Integrate `rs-soroban-ultrahonk` verifier
+    - `[x]` Write contract tests
+- `[x]` Step 2: RISC Zero + Noir & Payroll Flow (12-24h)
+    - `[x]` Initialize RISC Zero guest project `circuits/payroll_guest`
+    - `[x]` Write RISC Zero guest program (CSV validation)
+    - `[x]` Initialize Noir payroll circuit `circuits/payroll`
+    - `[x]` Write Noir payroll circuit (shielded transfer)
+    - `[x]` Write `private_treasury` Soroban contract
+    - `[x]` Integrate `stellar-risc0-verifier` and `rs-soroban-ultrahonk`
+    - `[x]` Write payroll flow tests
+- `[x]` Step 3: Circom & Private DAO Voting Flow (24-36h)
+    - `[x]` Write Circom voting circuit `circuits/circom/voting/voting.circom`
+    - `[x]` Generate Groth16 keys and compile to WebAssembly/R1CS
+    - `[x]` Write `private_governance` Soroban contract
+    - `[x]` Integrate Groth16 verifier
+    - `[x]` Write voting flow tests
+- `[ ]` Step 4: Frontend Integration & Deployment (36-48h)
+    - `[ ]` Integrate Freighter wallet in `frontend/`
+    - `[ ]` Integrate client-side provers (Noir JS, snarkjs)
+    - `[ ]` Deploy all contracts to Stellar Testnet
+    - `[ ]` Connect frontend to Testnet contracts via Soroban RPC

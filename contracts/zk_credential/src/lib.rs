@@ -126,4 +126,8 @@ impl ZkCredentialContract {
     pub fn is_credentialed(env: Env, pub_key_hash: Bytes) -> bool {
         env.storage().persistent().has(&pub_key_hash)
     }
+
+    pub fn has_nullifier(env: Env, nullifier: Bytes) -> bool {
+        env.storage().persistent().has(&nullifier)
+    }
 }

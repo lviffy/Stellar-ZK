@@ -16,6 +16,8 @@ frontend/out/
 frontend/build/
 .env*.local
 .npm/
+node_modules
+
 
 # OS / IDE
 .DS_Store
