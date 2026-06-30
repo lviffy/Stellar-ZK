@@ -1,4 +1,4 @@
-import { Contract, rpc, TransactionBuilder, Account, Operation, Networks, xdr } from "@stellar/stellar-sdk";
+import { Contract, rpc, TransactionBuilder, Account, Operation, Networks, xdr, nativeToScVal } from "@stellar/stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
 import { SOROBAN_RPC_URL } from "./contracts";
 
@@ -32,7 +32,13 @@ export async function invokeSorobanContract(
     const contract = new Contract(contractId);
     
     // 2. Build mock invocation
-    const operation = contract.call(methodName, ...args);
+    const scArgs = args.map(arg => {
+      if (arg && typeof arg === "object" && typeof arg.toXDR === "function") {
+        return arg;
+      }
+      return nativeToScVal(arg);
+    });
+    const operation = contract.call(methodName, ...scArgs);
     
     const tx = new TransactionBuilder(account, {
       fee: "100000", // 100k stroops

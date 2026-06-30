@@ -11,18 +11,25 @@ import { invokeSorobanContract } from "@/lib/soroban";
 import { PRIVATE_GOVERNANCE_ID } from "@/lib/contracts";
 import { LogEntry } from "@/lib/types";
 
-interface Props { credentialNullifier: string | null; }
+import { useCredential } from "@/hooks/useCredential";
 
-const PROPOSALS = [
-  { id: "p1", title: "Increase treasury reserve ratio to 15%", status: "OPEN"   },
-  { id: "p2", title: "Fund ZK circuit audit by external firm",  status: "OPEN"   },
-  { id: "p3", title: "Add USDC collateral to protocol reserves", status: "CLOSED" },
+interface Props { credentialNullifier?: string | null; }
+
+interface Proposal { id: string; title: string; desc: string; status: "OPEN" | "CLOSED"; }
+
+const SEED_PROPOSALS: Proposal[] = [
+  { id: "p1", title: "Increase treasury reserve ratio to 15%", desc: "Raise protocol safety margin by adjusting reserve ratio from 10% to 15%.", status: "OPEN" },
+  { id: "p2", title: "Fund ZK circuit audit by external firm",  desc: "Allocate 50k XLM to commission a third-party Groth16 circuit audit.", status: "OPEN" },
+  { id: "p3", title: "Add USDC collateral to protocol reserves", desc: "Accept USDC as collateral asset in the private treasury vault.", status: "CLOSED" },
 ];
 
 interface Tally { yes: number; no: number; }
 
-export default function VotingFlow({ credentialNullifier }: Props) {
+export default function VotingFlow({ credentialNullifier: propNullifier }: Props) {
   const { address, connectWallet } = useWallet();
+  const { nullifier: localNullifier } = useCredential();
+  const credentialNullifier = propNullifier !== undefined ? propNullifier : localNullifier;
+  const [proposals, setProposals] = useState<Proposal[]>(SEED_PROPOSALS);
   const [selected, setSelected] = useState<string | null>(null);
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   const [status, setStatus] = useState<"idle" | "proving" | "done">("idle");
@@ -33,9 +40,28 @@ export default function VotingFlow({ credentialNullifier }: Props) {
     p3: { yes: 21, no: 8 },
   });
   const [voted, setVoted] = useState<Set<string>>(new Set());
+  // create-proposal form
+  const [showCreate, setShowCreate] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newDesc,  setNewDesc]  = useState("");
+  const [creating, setCreating] = useState(false);
 
   const locked = !credentialNullifier;
-  const currentProposal = PROPOSALS.find((p) => p.id === selected);
+  const currentProposal = proposals.find((p) => p.id === selected);
+
+  function handleCreateProposal() {
+    if (!newTitle.trim()) return;
+    setCreating(true);
+    const id = `p${Date.now()}`;
+    setTimeout(() => {
+      setProposals((prev) => [...prev, { id, title: newTitle.trim(), desc: newDesc.trim() || "No description provided.", status: "OPEN" }]);
+      setTally((prev) => ({ ...prev, [id]: { yes: 0, no: 0 } }));
+      setNewTitle("");
+      setNewDesc("");
+      setShowCreate(false);
+      setCreating(false);
+    }, 600); // simulate brief submission
+  }
 
   async function handleVote() {
     if (!selected || !choice || status === "proving") return;
@@ -111,36 +137,142 @@ export default function VotingFlow({ credentialNullifier }: Props) {
   }
 
   return (
-    <section id="voting" style={{ borderTop: `1px solid ${T.border}`, padding: "80px 0" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-        {/* Header */}
-        <div style={{ maxWidth: 640, marginBottom: 40 }}>
-          <h2 style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)", fontWeight: 600, letterSpacing: "-0.02em", color: T.text, marginBottom: 16 }}>
-            Private DAO Voting
-          </h2>
-          <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, maxWidth: "55ch", marginBottom: 16 }}>
-            Your credential nullifier proves membership. A Circom Groth16 proof
-            seals your vote. The tally publishes on-chain. Individual votes are
-            permanently sealed.
+    <div style={{ position: "relative", opacity: locked ? 0.35 : 1, pointerEvents: locked ? "none" : "auto" }}>
+      {locked && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            gap: 8,
+            backgroundColor: "rgba(9, 9, 11, 0.7)",
+            backdropFilter: "blur(4px)",
+            border: `1px dashed ${T.border}`,
+            borderRadius: T.r,
+          }}
+        >
+          <Lock size={24} style={{ color: T.muted }} />
+          <p style={{ fontSize: 12, fontFamily: "var(--font-geist-mono), monospace", color: T.muted }}>
+            Complete ZK Credentials verification to unlock
           </p>
-          <span style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: 11, border: `1px solid ${T.border}`, padding: "4px 8px", color: T.mutedLo, borderRadius: T.r }}>
-            CIRCOM / Groth16 Soroban Verifier
-          </span>
         </div>
-
-        {/* Lock wrapper */}
-        <div style={{ position: "relative", opacity: locked ? 0.4 : 1, pointerEvents: locked ? "none" : "auto" }}>
-          {locked && (
-            <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 8 }}>
-              <Lock size={24} style={{ color: T.muted }} />
-              <p style={{ fontSize: 12, fontFamily: "var(--font-geist-mono), monospace", color: T.muted }}>Complete Flow 1 to unlock</p>
-            </div>
-          )}
+      )}
 
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
             {/* Left: proposals */}
             <div>
-              {PROPOSALS.map((proposal) => (
+              {/* New Proposal button */}
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+                <button
+                  onClick={() => { setShowCreate((v) => !v); setNewTitle(""); setNewDesc(""); }}
+                  style={{
+                    padding: "8px 16px",
+                    fontSize: 11,
+                    fontFamily: "var(--font-geist-mono), monospace",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.12em",
+                    border: `1px solid ${showCreate ? T.accent : T.border}`,
+                    background: showCreate ? `${T.accent}18` : "transparent",
+                    color: showCreate ? T.accent : T.muted,
+                    borderRadius: T.r,
+                    cursor: "pointer",
+                    transition: "all 0.15s",
+                  }}
+                >
+                  {showCreate ? "✕ Cancel" : "+ New Proposal"}
+                </button>
+              </div>
+
+              {/* Create form */}
+              <AnimatePresence>
+                {showCreate && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div style={{ border: `1px solid ${T.accent}44`, borderRadius: T.r, padding: 20, marginBottom: 20, display: "flex", flexDirection: "column", gap: 14 }}>
+                      <p style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", textTransform: "uppercase", letterSpacing: "0.12em", color: T.accent }}>New Proposal</p>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        <label style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, textTransform: "uppercase", letterSpacing: "0.1em" }}>Title *</label>
+                        <input
+                          value={newTitle}
+                          onChange={(e) => setNewTitle(e.target.value)}
+                          placeholder="e.g. Increase emission rate by 5%"
+                          maxLength={100}
+                          style={{
+                            background: T.bg,
+                            border: `1px solid ${T.border}`,
+                            borderRadius: T.r,
+                            padding: "10px 12px",
+                            fontSize: 13,
+                            color: T.text,
+                            fontFamily: "inherit",
+                            outline: "none",
+                            width: "100%",
+                            boxSizing: "border-box",
+                          }}
+                          onFocus={(e) => (e.currentTarget.style.borderColor = T.accent)}
+                          onBlur={(e) => (e.currentTarget.style.borderColor = T.border)}
+                        />
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                        <label style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, textTransform: "uppercase", letterSpacing: "0.1em" }}>Description</label>
+                        <textarea
+                          value={newDesc}
+                          onChange={(e) => setNewDesc(e.target.value)}
+                          placeholder="Describe the rationale and impact..."
+                          rows={3}
+                          maxLength={400}
+                          style={{
+                            background: T.bg,
+                            border: `1px solid ${T.border}`,
+                            borderRadius: T.r,
+                            padding: "10px 12px",
+                            fontSize: 13,
+                            color: T.text,
+                            fontFamily: "inherit",
+                            outline: "none",
+                            width: "100%",
+                            boxSizing: "border-box",
+                            resize: "vertical",
+                          }}
+                          onFocus={(e) => (e.currentTarget.style.borderColor = T.accent)}
+                          onBlur={(e) => (e.currentTarget.style.borderColor = T.border)}
+                        />
+                      </div>
+                      <button
+                        onClick={handleCreateProposal}
+                        disabled={!newTitle.trim() || creating}
+                        style={{
+                          padding: "10px 20px",
+                          fontSize: 11,
+                          fontFamily: "var(--font-geist-mono), monospace",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.12em",
+                          background: T.accent,
+                          color: T.bg,
+                          border: "none",
+                          borderRadius: T.r,
+                          cursor: !newTitle.trim() || creating ? "not-allowed" : "pointer",
+                          opacity: !newTitle.trim() || creating ? 0.4 : 1,
+                          width: "fit-content",
+                          transition: "opacity 0.15s",
+                        }}
+                      >
+                        {creating ? "Submitting..." : "Submit Proposal"}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {proposals.map((proposal) => (
                 <div
                   key={proposal.id}
                   onClick={() => {
@@ -264,7 +396,7 @@ export default function VotingFlow({ credentialNullifier }: Props) {
               <p style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: T.mutedLo }}>
                 Live Tally
               </p>
-              {PROPOSALS.map((proposal) => (
+              {proposals.map((proposal) => (
                 <div key={proposal.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <p style={{ fontSize: 12, color: T.muted, lineHeight: 1.4 }}>
                     {proposal.title.length > 36 ? proposal.title.slice(0, 36) + "..." : proposal.title}
@@ -298,8 +430,6 @@ export default function VotingFlow({ credentialNullifier }: Props) {
               )}
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

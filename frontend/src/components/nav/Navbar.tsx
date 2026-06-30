@@ -21,9 +21,9 @@ export default function Navbar() {
   const { address, connecting, connectWallet, disconnectWallet } = useWallet();
 
   const links = [
-    { href: "#credentials", label: "Credentials" },
-    { href: "#payroll",     label: "Payroll"      },
-    { href: "#voting",      label: "Voting"        },
+    { href: "/credentials", label: "Credentials" },
+    { href: "/payroll",     label: "Payroll"      },
+    { href: "/voting",      label: "Voting"        },
   ];
 
   return (
@@ -59,7 +59,7 @@ export default function Navbar() {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             {links.map((l) => (
-              <a
+              <Link
                 key={l.href}
                 href={l.href}
                 className="text-sm transition-colors duration-150"
@@ -68,7 +68,7 @@ export default function Navbar() {
                 onMouseLeave={(e) => (e.currentTarget.style.color = T.muted)}
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -131,7 +131,7 @@ export default function Navbar() {
           style={{ backgroundColor: T.bg }}
         >
           {links.map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
@@ -139,7 +139,7 @@ export default function Navbar() {
               style={{ color: T.muted }}
             >
               {l.label}
-            </a>
+            </Link>
           ))}
           {address ? (
             <button

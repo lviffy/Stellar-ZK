@@ -10,16 +10,18 @@ import { invokeSorobanContract } from "@/lib/soroban";
 import { ZK_CREDENTIAL_ID } from "@/lib/contracts";
 import { LogEntry } from "@/lib/types";
 
+import { useCredential } from "@/hooks/useCredential";
+
 interface Credential { nullifier: string; issuedAt: string; }
-interface Props { onCredentialIssued: (c: Credential) => void; }
+interface Props { onCredentialIssued?: (c: Credential) => void; }
 
 export default function CredentialFlow({ onCredentialIssued }: Props) {
   const { address, connectWallet } = useWallet();
+  const { credential, saveCredential, clearCredential, loading } = useCredential();
   const [balance, setBalance] = useState("");
   const [member, setMember] = useState(false);
   const [age, setAge] = useState(false);
   const [status, setStatus] = useState<"idle" | "proving" | "done">("idle");
-  const [credential, setCredential] = useState<Credential | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
 
   const canProve = balance !== "" && Number(balance) >= 0;
@@ -70,9 +72,11 @@ export default function CredentialFlow({ onCredentialIssued }: Props) {
         nullifier: result.proof.nullifier,
         issuedAt: new Date().toISOString(),
       };
-      setCredential(cred);
+      saveCredential(cred);
       setStatus("done");
-      onCredentialIssued(cred);
+      if (onCredentialIssued) {
+        onCredentialIssued(cred);
+      }
     } else {
       setLogs((prev) => [
         ...prev,
@@ -90,55 +94,12 @@ export default function CredentialFlow({ onCredentialIssued }: Props) {
   ];
 
   return (
-    <section id="credentials" style={{ borderTop: `1px solid ${T.border}`, padding: "80px 0" }}>
-      <div
-        style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16"
-      >
-        {/* Left */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <h2
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              color: T.text,
-            }}
-          >
-            ZK Credentials
-          </h2>
-          <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, maxWidth: "52ch" }}>
-            Prove your balance, membership, and eligibility without revealing
-            the underlying values. Your credential nullifier is stored on-chain
-            and reused across payroll and voting flows.
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {CHECKS.map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-                <CheckCircle size={14} weight="bold" style={{ marginTop: 2, flexShrink: 0, color: T.accent }} />
-                <span style={{ fontSize: 14, color: T.muted }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: 8 }}>
-            <span
-              style={{
-                fontFamily: "var(--font-geist-mono), monospace",
-                fontSize: 11,
-                border: `1px solid ${T.border}`,
-                padding: "4px 8px",
-                color: T.mutedLo,
-                borderRadius: T.r,
-              }}
-            >
-              NOIR / rs-soroban-ultrahonk
-            </span>
-          </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      {loading ? (
+        <div style={{ background: T.surface, border: `1px solid ${T.border}`, padding: "32px 16px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ fontSize: 12, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo }}>Loading credential...</span>
         </div>
-
-        {/* Right: interactive */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {status !== "done" ? (
+      ) : (!credential && status !== "done") ? (
             <>
               {/* Balance input */}
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -300,10 +261,39 @@ export default function CredentialFlow({ onCredentialIssued }: Props) {
                 <Lock size={12} weight="bold" />
                 Payroll and Voting flows unlocked
               </div>
+              <button
+                id="reset-credential-btn"
+                onClick={clearCredential}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "8px 16px",
+                  fontSize: 10,
+                  fontFamily: "var(--font-geist-mono), monospace",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  background: "transparent",
+                  color: T.muted,
+                  borderRadius: T.r,
+                  border: `1px solid ${T.border}`,
+                  cursor: "pointer",
+                  width: "fit-content",
+                  marginTop: 8,
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = T.error;
+                  (e.currentTarget as HTMLElement).style.color = T.error;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = T.border;
+                  (e.currentTarget as HTMLElement).style.color = T.muted;
+                }}
+              >
+                Reset Credential
+              </button>
             </div>
           )}
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }
