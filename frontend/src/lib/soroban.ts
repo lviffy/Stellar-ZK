@@ -1,4 +1,4 @@
-import { Contract, rpc, TransactionBuilder, Account, Operation, Networks, xdr, nativeToScVal, scValToNative } from "@stellar/stellar-sdk";
+import { Contract, rpc, TransactionBuilder, Account, Networks, nativeToScVal, scValToNative } from "@stellar/stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
 import { SOROBAN_RPC_URL } from "./contracts";
 
@@ -10,6 +10,10 @@ export interface SorobanCallResult {
   error?: string;
 }
 
+/**
+ * Invoke a Soroban smart contract method with Freighter wallet signing.
+ * No mock fallbacks — transactions either succeed on-chain or report real errors.
+ */
 export async function invokeSorobanContract(
   contractId: string,
   methodName: string,
@@ -24,14 +28,17 @@ export async function invokeSorobanContract(
     try {
       const accountInfo = await server.getAccount(userAddress);
       account = new Account(userAddress, accountInfo.sequenceNumber());
-    } catch {
-      // Stub sequence if fetch fails
-      account = new Account(userAddress, "12345");
+    } catch (e: any) {
+      console.error("Failed to fetch account from Soroban RPC:", e?.message || e);
+      return {
+        success: false,
+        error: `Account not found on testnet. Make sure ${userAddress.slice(0, 8)}... is funded via friendbot.`
+      };
     }
 
     const contract = new Contract(contractId);
     
-    // 2. Build mock invocation
+    // 2. Build contract invocation
     const scArgs = args.map(arg => {
       if (arg && typeof arg === "object" && typeof arg.toXDR === "function") {
         return arg;
@@ -48,39 +55,85 @@ export async function invokeSorobanContract(
       .setTimeout(30)
       .build();
 
-    const xdrString = tx.toXDR();
-    console.log("Simulated XDR build successful: ", xdrString.slice(0, 50) + "...");
+    // 3. Simulate first to get resource estimates and check for errors
+    console.log("Simulating transaction...");
+    const simResponse = await server.simulateTransaction(tx);
+    
+    if (!rpc.Api.isSimulationSuccess(simResponse)) {
+      const simError = 'error' in simResponse 
+        ? (typeof simResponse.error === 'string' ? simResponse.error : JSON.stringify(simResponse.error))
+        : "Simulation failed";
+      console.error("Transaction simulation failed:", simError);
+      return {
+        success: false,
+        error: `Simulation failed: ${simError}`
+      };
+    }
 
-    // 3. Request Freighter signing
-    console.log("Requesting Freighter signature...");
+    // 4. Assemble the transaction with simulation results (resource estimates, auth)
+    const assembledTx = rpc.assembleTransaction(tx, simResponse).build();
+    const xdrString = assembledTx.toXDR();
+    console.log("Transaction assembled successfully, requesting Freighter signature...");
+
+    // 5. Request Freighter signing
     const result = await signTransaction(xdrString, {
       networkPassphrase: "Test SDF Network ; September 2015"
     });
     if (!result || !result.signedTxXdr) {
-      throw new Error("Failed to sign transaction.");
+      return {
+        success: false,
+        error: "User rejected the transaction in Freighter."
+      };
     }
 
     console.log("Freighter signature retrieved! Submitting to Soroban RPC...");
     
-    // We send transaction to network
-    // Note: Since this runs on testnet/demo, we can submit or mock success
-    // to prevent block delays during interactive frontends.
-    try {
-      const signedTx = TransactionBuilder.fromXDR(result.signedTxXdr, Networks.TESTNET);
-      const response = await server.sendTransaction(signedTx);
-      if (response.status === "ERROR") {
-        throw new Error(response.errorResult?.toXDR("base64") || "RPC Transaction Submission Error");
-      }
+    // 6. Submit signed transaction
+    const signedTx = TransactionBuilder.fromXDR(result.signedTxXdr, Networks.TESTNET);
+    const sendResponse = await server.sendTransaction(signedTx);
+    
+    if (sendResponse.status === "ERROR") {
+      const errorDetail = sendResponse.errorResult?.toXDR("base64") || "Unknown submission error";
+      console.error("Transaction submission error:", errorDetail);
       return {
-        success: true,
-        txHash: response.hash
+        success: false,
+        error: `Submission error: ${errorDetail}`
       };
-    } catch (e: any) {
-      console.warn("RPC submit failed (expected on unfunded/unconfigured testnet contracts), mocking TX hash for UI continuity.", e);
-      // Fallback mock hash to keep UI active and satisfying for hackathon judges
+    }
+
+    // 7. Poll for transaction result (sendTransaction returns PENDING)
+    console.log(`Transaction submitted: ${sendResponse.hash}. Polling for result...`);
+    const txHash = sendResponse.hash;
+    
+    let getResponse = await server.getTransaction(txHash);
+    const maxAttempts = 30; // 30 seconds max wait
+    let attempts = 0;
+    
+    while (getResponse.status === "NOT_FOUND" && attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      getResponse = await server.getTransaction(txHash);
+      attempts++;
+    }
+
+    if (getResponse.status === "SUCCESS") {
+      console.log("Transaction confirmed on-chain:", txHash);
       return {
         success: true,
-        txHash: "a687fc" + Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0") + "c129e05"
+        txHash
+      };
+    } else if (getResponse.status === "FAILED") {
+      console.error("Transaction failed on-chain:", getResponse);
+      return {
+        success: false,
+        txHash,
+        error: "Transaction failed on-chain. The contract may have rejected the vote (e.g. already voted, invalid proof)."
+      };
+    } else {
+      console.warn("Transaction status unknown after polling:", getResponse.status);
+      return {
+        success: false,
+        txHash,
+        error: `Transaction status: ${getResponse.status}. It may still be processing.`
       };
     }
   } catch (err: any) {
@@ -90,16 +143,6 @@ export async function invokeSorobanContract(
       error: err.message || "Failed to invoke Soroban contract"
     };
   }
-}
-
-// Converts a G... address string to Ed25519 bytes
-function stellarPublicKeyToBytes(publicKey: string): Uint8Array {
-  // Simple ed25519 decoding placeholder for public key representation
-  const out = new Uint8Array(32);
-  for (let i = 0; i < 32; i++) {
-    out[i] = publicKey.charCodeAt(i % publicKey.length);
-  }
-  return out;
 }
 
 export async function getTallyFromSoroban(
@@ -133,4 +176,3 @@ export async function getTallyFromSoroban(
     return null;
   }
 }
-

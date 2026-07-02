@@ -129,71 +129,36 @@ export async function proveVote(
   logs.push({ label: "circom", text: `generating vote proof: choice=${voteChoice === 1 ? "YES" : "NO"}...` });
   
   try {
-    // Dynamic import to prevent SSR issues in Next.js
+    // Dynamic imports to prevent SSR issues in Next.js
     // @ts-ignore
     const snarkjs = await import("snarkjs");
+    // @ts-ignore
+    const { buildPoseidon } = await import("circomlibjs");
     
-    // We compute the inputs
-    // In order to hash in browser Poseidon, we can dynamically load circomlibjs
-    // or we can fall back to the pre-generated valid proof if standard inputs are used.
-    // Let's provide a real proof if using secret 12345 and proposal 1
-    if (userSecret === 12345 && proposalId === 1) {
-      logs.push({ label: "circom", text: "matching pre-compiled witness for user_secret=12345..." });
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      logs.push({ label: "circom", text: "Groth16 prover: generating proof & public signals..." });
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      
-      const proof: Groth16ProofType = {
-        a: [
-          "0x01536fdd8b053cabc8f52db8c827ad0b3c13fa49597777e54d17ffb17e42a527",
-          "0x050e3f8377f2a2f6b1cc48fb8e3140ec66071d6346d36bc1d10e5e716f5229c9"
-        ],
-        b: [
-          [
-            "0x0f379b4080ec3f4e07d6dcdf96b72802d00685fa49e3c88b0e808a921ce28ba5",
-            "0x18c3b45cfa98aef3581a673a5ed70af69856dca4de1590a5157af317837ae39e"
-          ],
-          [
-            "0x2cf3e999638884d725efc4ee727e75f1545599ccc8ebc8c954eea5eab8a208a4",
-            "0x1c0d7d8b5cfd70e16d7d0eb6797cdd6d0bc4f0054a316d5737443591dcf43d6c"
-          ]
-        ],
-        c: [
-          "0x072280065bee6ed6a96cd78a6792e7b00385f7ba0bb09092d91939415fa0712f",
-          "0x12d7f48d977f1c8008eaee4ddb087fea5b8568f4eb8a9dd75ec1203ff5b0ef3a"
-        ]
-      };
-      
-      const credentialNullifier = "0x0132013acf7f80aa59c175babe6efacaa47cbd24f81f1be462702e8d8ca34c9d";
-      const votingNullifier = "0x0950acb7e532ebb21176a28dee52617a5a37ce9294aab1cf603024e5b9063f9a";
-      
-      const publicInputs = [
-        credentialNullifier,
-        "0x" + proposalId.toString(16).padStart(64, "0"),
-        "0x" + voteChoice.toString(16).padStart(64, "0"),
-        votingNullifier
-      ];
-      
-      logs.push({ label: "circom", text: "Groth16 proof successfully generated (256 bytes)" });
-      return {
-        success: true,
-        proof: { proof, publicInputs },
-        publicInputs,
-        logs
-      };
-    }
+    logs.push({ label: "circom", text: "computing Poseidon nullifiers in-browser..." });
     
-    // Live snarkjs run
+    // Build the Poseidon hasher (same as circom's Poseidon(2))
+    const poseidon = await buildPoseidon();
+    
+    // credential_nullifier = Poseidon(user_secret, 0)
+    const credentialHash = poseidon([userSecret, 0]);
+    const credentialNullifier = poseidon.F.toString(credentialHash);
+    
+    // voting_nullifier = Poseidon(user_secret, proposal_id)
+    const votingHash = poseidon([userSecret, proposalId]);
+    const votingNullifier = poseidon.F.toString(votingHash);
+    
     logs.push({ label: "circom", text: "loading circuit wasm & zkey..." });
+    
     const input = {
       user_secret: userSecret.toString(),
-      credential_nullifier: "2354897258902759082735908273905872903857290357", // computed or dummy fallback
+      credential_nullifier: credentialNullifier,
       proposal_id: proposalId.toString(),
       vote_choice: voteChoice.toString(),
-      voting_nullifier: "34895729087590287590287590283759827390587290" // computed or dummy fallback
+      voting_nullifier: votingNullifier
     };
     
-    // We try to run the prover using our copied public assets
+    // Run the real Groth16 prover using the compiled circuit assets
     const { proof, publicSignals } = await snarkjs.groth16.fullProve(
       input,
       "/zk/voting.wasm",
@@ -211,39 +176,36 @@ export async function proveVote(
       c: [proof.pi_c[0], proof.pi_c[1]]
     };
     
-    return {
-      success: true,
-      proof: { proof: formattedProof, publicInputs: publicSignals },
-      publicInputs: publicSignals,
-      logs
-    };
-  } catch (err: any) {
-    console.warn("Real prover failed, falling back to simulated proof: ", err);
-    logs.push({ label: "circom", text: "witness computation complete. constraints satisfied" });
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    logs.push({ label: "circom", text: "Groth16 proof generated (simulated)" });
+    // Convert nullifiers to hex for downstream Soroban usage
+    const hexCredNullifier = "0x" + BigInt(credentialNullifier).toString(16).padStart(64, "0");
+    const hexVotingNullifier = "0x" + BigInt(votingNullifier).toString(16).padStart(64, "0");
+    const hexProposalId = "0x" + BigInt(proposalId).toString(16).padStart(64, "0");
+    const hexVoteChoice = "0x" + BigInt(voteChoice).toString(16).padStart(64, "0");
     
-    const mockProof: Groth16ProofType = {
-      a: ["0x" + "1".repeat(64), "0x" + "2".repeat(64)],
-      b: [
-        ["0x" + "3".repeat(64), "0x" + "4".repeat(64)],
-        ["0x" + "5".repeat(64), "0x" + "6".repeat(64)]
-      ],
-      c: ["0x" + "7".repeat(64), "0x" + "8".repeat(64)]
-    };
+    logs.push({ label: "circom", text: `nullifier: ${hexCredNullifier.slice(0, 18)}...` });
+    logs.push({ label: "circom", text: "Groth16 proof successfully generated" });
     
     return {
       success: true,
       proof: {
-        proof: mockProof,
+        proof: formattedProof,
         publicInputs: [
-          "0x0132013acf7f80aa59c175babe6efacaa47cbd24f81f1be462702e8d8ca34c9d",
-          proposalId.toString(),
-          voteChoice.toString(),
-          "0x0950acb7e532ebb21176a28dee52617a5a37ce9294aab1cf603024e5b9063f9a"
+          hexCredNullifier,
+          hexProposalId,
+          hexVoteChoice,
+          hexVotingNullifier
         ]
       },
-      publicInputs: [],
+      publicInputs: publicSignals,
+      logs
+    };
+  } catch (err: any) {
+    console.error("ZK prover error:", err);
+    logs.push({ label: "circom", text: `proof generation failed: ${err.message || err}` });
+    return {
+      success: false,
+      proof: null,
+      publicInputs: null,
       logs
     };
   }

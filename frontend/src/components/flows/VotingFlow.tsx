@@ -31,7 +31,7 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
   const [tally, setTally] = useState<Record<string, Tally>>({});
   const [voted, setVoted] = useState<Set<string>>(new Set());
 
-  // Load proposals from localStorage on mount
+  // Load proposals and voted state from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("dao_proposals");
     if (saved) {
@@ -39,6 +39,15 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
         setProposals(JSON.parse(saved));
       } catch (e) {
         console.error("Failed to parse saved proposals", e);
+      }
+    }
+    // Restore voted proposals across page refreshes
+    const savedVoted = localStorage.getItem("dao_voted_proposals");
+    if (savedVoted) {
+      try {
+        setVoted(new Set(JSON.parse(savedVoted)));
+      } catch (e) {
+        console.error("Failed to parse saved voted state", e);
       }
     }
   }, []);
@@ -64,12 +73,17 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
         numericId = 1;
       }
       const result = await getTallyFromSoroban(PRIVATE_GOVERNANCE_ID, numericId);
+      const local = localTallies[p.id] || { yes: 0, no: 0 };
       if (result) {
         const [noVotes, yesVotes] = result;
-        newTally[p.id] = { yes: yesVotes, no: noVotes };
-        localTallies[p.id] = { yes: yesVotes, no: noVotes };
+        // Take the max of contract vs local values to avoid losing locally-tracked votes
+        newTally[p.id] = {
+          yes: Math.max(yesVotes, local.yes),
+          no: Math.max(noVotes, local.no)
+        };
+        localTallies[p.id] = newTally[p.id];
       } else {
-        newTally[p.id] = localTallies[p.id] || { yes: 0, no: 0 };
+        newTally[p.id] = local;
       }
     }
     localStorage.setItem("dao_local_tallies", JSON.stringify(localTallies));
@@ -127,6 +141,12 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
   async function handleVote() {
     if (!selected || !choice || status === "proving") return;
     
+    // Prevent double voting (client-side check, contract also enforces via nullifier)
+    if (voted.has(selected)) {
+      setLogs([{ label: "system", text: "You have already voted on this proposal." }]);
+      return;
+    }
+    
     let activeAddress = address;
     if (!activeAddress) {
       activeAddress = await connectWallet();
@@ -147,6 +167,7 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
     setLogs(result.logs);
     
     if (!result.success || !result.proof) {
+      setLogs((prev) => [...prev, { label: "system", text: "ZK proof generation failed. Cannot proceed." }]);
       setStatus("idle");
       return;
     }
@@ -199,10 +220,20 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
       localTallies[selected] = current;
       localStorage.setItem("dao_local_tallies", JSON.stringify(localTallies));
 
-      // Reload tallies from contract (will fallback to local cache if fetch fails)
-      await loadTallies(proposals);
+      // Update React tally state directly so the UI reflects immediately
+      setTally((prev) => ({
+        ...prev,
+        [selected]: { ...current }
+      }));
       
-      setVoted((prev) => new Set([...prev, selected]));
+      // Mark as voted and persist to localStorage
+      const newVoted = new Set([...voted, selected]);
+      setVoted(newVoted);
+      localStorage.setItem("dao_voted_proposals", JSON.stringify([...newVoted]));
+      
+      // Also try to reload from contract for accuracy
+      loadTallies(proposals).catch(() => {});
+      
       setStatus("done");
       setTimeout(() => { setStatus("idle"); setSelected(null); setChoice(null); }, 3500);
     } else {
