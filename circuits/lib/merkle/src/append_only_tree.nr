@@ -15,7 +15,7 @@ where
 {
     // TODO(Lasse): Sanity check len of sibling_path > height of subtree
     // TODO(Lasse): Ensure height of subtree is correct (eg 3 for commitments, 1 for contracts)
-    let leaf_index_at_depth = (next_available_leaf_index >> (subtree_depth as u64)) as u32;
+    let leaf_index_at_depth = (next_available_leaf_index >> (subtree_depth as u8)) as u32;
 
     // Check that the current root is correct and that there is an empty subtree at the insertion location
     assert_check_membership::<N, H>(
@@ -33,7 +33,7 @@ where
     );
 
     // 2^subtree_depth is the number of leaves added. 2^x = 1 << x
-    let new_next_available_leaf_index = next_available_leaf_index + (1 << (subtree_depth as u64));
+    let new_next_available_leaf_index = next_available_leaf_index + (1 << (subtree_depth as u8));
 
     (new_root, new_next_available_leaf_index)
 }

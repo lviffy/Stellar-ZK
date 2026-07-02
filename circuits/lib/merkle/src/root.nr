@@ -23,7 +23,7 @@ where
     H: Hasher + Default,
 {
     let mut node = leaf;
-    let indices: [bool; N] = leaf_index.to_le_bits();
+    let indices: [u1; N] = leaf_index.to_le_bits();
 
     for i in 0..N {
         let (hash_left, hash_right) = if indices[i] {
