@@ -26,7 +26,7 @@ where
     let indices: [u1; N] = leaf_index.to_le_bits();
 
     for i in 0..N {
-        let (hash_left, hash_right) = if indices[i] {
+        let (hash_left, hash_right) = if indices[i] == 1 {
             (sibling_path[i], node)
         } else {
             (node, sibling_path[i])
