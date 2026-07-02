@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import ZKConsole from "../hero/ZKConsole";
 import { Lock } from "@phosphor-icons/react";
 import { T } from "@/lib/tokens";
 import { useWallet } from "@/hooks/useWallet";
 import { proveVote } from "@/lib/zkProver";
-import { invokeSorobanContract } from "@/lib/soroban";
+import { invokeSorobanContract, getTallyFromSoroban } from "@/lib/soroban";
 import { PRIVATE_GOVERNANCE_ID } from "@/lib/contracts";
 import { LogEntry } from "@/lib/types";
 
@@ -17,29 +17,56 @@ interface Props { credentialNullifier?: string | null; }
 
 interface Proposal { id: string; title: string; desc: string; status: "OPEN" | "CLOSED"; }
 
-const SEED_PROPOSALS: Proposal[] = [
-  { id: "p1", title: "Increase treasury reserve ratio to 15%", desc: "Raise protocol safety margin by adjusting reserve ratio from 10% to 15%.", status: "OPEN" },
-  { id: "p2", title: "Fund ZK circuit audit by external firm",  desc: "Allocate 50k XLM to commission a third-party Groth16 circuit audit.", status: "OPEN" },
-  { id: "p3", title: "Add USDC collateral to protocol reserves", desc: "Accept USDC as collateral asset in the private treasury vault.", status: "CLOSED" },
-];
-
 interface Tally { yes: number; no: number; }
 
 export default function VotingFlow({ credentialNullifier: propNullifier }: Props) {
   const { address, connectWallet } = useWallet();
   const { nullifier: localNullifier } = useCredential();
   const credentialNullifier = propNullifier !== undefined ? propNullifier : localNullifier;
-  const [proposals, setProposals] = useState<Proposal[]>(SEED_PROPOSALS);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [choice, setChoice] = useState<"yes" | "no" | null>(null);
   const [status, setStatus] = useState<"idle" | "proving" | "done">("idle");
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [tally, setTally] = useState<Record<string, Tally>>({
-    p1: { yes: 14, no: 3 },
-    p2: { yes: 9,  no: 2 },
-    p3: { yes: 21, no: 8 },
-  });
+  const [tally, setTally] = useState<Record<string, Tally>>({});
   const [voted, setVoted] = useState<Set<string>>(new Set());
+
+  // Load proposals from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("dao_proposals");
+    if (saved) {
+      try {
+        setProposals(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse saved proposals", e);
+      }
+    }
+  }, []);
+
+  async function loadTallies(list: Proposal[]) {
+    const newTally: Record<string, Tally> = {};
+    for (const p of list) {
+      let numericId = 0;
+      if (p.id.startsWith("p")) {
+        numericId = parseInt(p.id.slice(1), 10);
+      } else {
+        numericId = parseInt(p.id, 10);
+      }
+      if (isNaN(numericId)) {
+        numericId = 1;
+      }
+      const [noVotes, yesVotes] = await getTallyFromSoroban(PRIVATE_GOVERNANCE_ID, numericId);
+      newTally[p.id] = { yes: yesVotes, no: noVotes };
+    }
+    setTally(newTally);
+  }
+
+  // Load tallies whenever proposals change
+  useEffect(() => {
+    if (proposals.length > 0) {
+      loadTallies(proposals);
+    }
+  }, [proposals]);
   // create-proposal form
   const [showCreate, setShowCreate] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -52,9 +79,19 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
   function handleCreateProposal() {
     if (!newTitle.trim()) return;
     setCreating(true);
-    const id = `p${Date.now()}`;
+    const proposalNum = Date.now();
+    const id = `p${proposalNum}`;
+    const newProp: Proposal = {
+      id,
+      title: newTitle.trim(),
+      desc: newDesc.trim() || "No description provided.",
+      status: "OPEN"
+    };
+
     setTimeout(() => {
-      setProposals((prev) => [...prev, { id, title: newTitle.trim(), desc: newDesc.trim() || "No description provided.", status: "OPEN" }]);
+      const updatedList = [...proposals, newProp];
+      setProposals(updatedList);
+      localStorage.setItem("dao_proposals", JSON.stringify(updatedList));
       setTally((prev) => ({ ...prev, [id]: { yes: 0, no: 0 } }));
       setNewTitle("");
       setNewDesc("");
@@ -75,7 +112,12 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
     setStatus("proving");
     setLogs([{ label: "system", text: "Initializing private vote..." }]);
     
-    const proposalNum = selected === "p1" ? 1n : selected === "p2" ? 2n : 3n;
+    let proposalNum = 1n;
+    if (selected.startsWith("p")) {
+      proposalNum = BigInt(selected.slice(1));
+    } else {
+      proposalNum = BigInt(selected);
+    }
     
     const result = await proveVote(12345, Number(proposalNum), choice === "yes" ? 1 : 0);
     setLogs(result.logs);
@@ -117,13 +159,10 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
         { label: "soroban", text: `Tx Hash: ${callResult.txHash}` },
         { label: "system", text: "Vote cast successfully & stored on-chain!" }
       ]);
-      setTally((prev) => ({
-        ...prev,
-        [selected]: {
-          yes: prev[selected].yes + (choice === "yes" ? 1 : 0),
-          no:  prev[selected].no  + (choice === "no"  ? 1 : 0),
-        },
-      }));
+      
+      // Reload tallies from contract
+      await loadTallies(proposals);
+      
       setVoted((prev) => new Set([...prev, selected]));
       setStatus("done");
       setTimeout(() => { setStatus("idle"); setSelected(null); setChoice(null); }, 3500);
@@ -272,49 +311,57 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
                 )}
               </AnimatePresence>
 
-              {proposals.map((proposal) => (
-                <div
-                  key={proposal.id}
-                  onClick={() => {
-                    if (proposal.status === "OPEN" && !voted.has(proposal.id)) {
-                      setSelected(selected === proposal.id ? null : proposal.id);
-                      setChoice(null);
-                      setStatus("idle");
-                    }
-                  }}
-                  style={{
-                    borderBottom: `1px solid ${T.border}`,
-                    padding: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 16,
-                    cursor: proposal.status === "OPEN" && !voted.has(proposal.id) ? "pointer" : "default",
-                    background: selected === proposal.id ? T.surface : "transparent",
-                    transition: "background 0.15s",
-                    marginLeft: -24,
-                    marginRight: -24,
-                    paddingLeft: 24,
-                    paddingRight: 24,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (proposal.status === "OPEN") (e.currentTarget as HTMLDivElement).style.background = T.surface;
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selected !== proposal.id) (e.currentTarget as HTMLDivElement).style.background = "transparent";
-                  }}
-                >
-                  <span style={{ fontSize: 14, color: T.text }}>{proposal.title}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-                    {voted.has(proposal.id) && (
-                      <span style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", color: T.success }}>Voted</span>
-                    )}
-                    <span style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", textTransform: "uppercase", letterSpacing: "0.12em", color: proposal.status === "OPEN" ? T.accent : T.mutedLo }}>
-                      {proposal.status}
-                    </span>
-                  </div>
+              {proposals.length === 0 ? (
+                <div style={{ padding: "40px 24px", textAlign: "center", border: `1px dashed ${T.border}`, borderRadius: T.r }}>
+                  <p style={{ fontSize: 13, color: T.mutedLo }}>
+                    No proposals found. Click "+ New Proposal" in the top right to create one.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                proposals.map((proposal) => (
+                  <div
+                    key={proposal.id}
+                    onClick={() => {
+                      if (proposal.status === "OPEN" && !voted.has(proposal.id)) {
+                        setSelected(selected === proposal.id ? null : proposal.id);
+                        setChoice(null);
+                        setStatus("idle");
+                      }
+                    }}
+                    style={{
+                      borderBottom: `1px solid ${T.border}`,
+                      padding: "16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 16,
+                      cursor: proposal.status === "OPEN" && !voted.has(proposal.id) ? "pointer" : "default",
+                      background: selected === proposal.id ? T.surface : "transparent",
+                      transition: "background 0.15s",
+                      marginLeft: -24,
+                      marginRight: -24,
+                      paddingLeft: 24,
+                      paddingRight: 24,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (proposal.status === "OPEN") (e.currentTarget as HTMLDivElement).style.background = T.surface;
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selected !== proposal.id) (e.currentTarget as HTMLDivElement).style.background = "transparent";
+                    }}
+                  >
+                    <span style={{ fontSize: 14, color: T.text }}>{proposal.title}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
+                      {voted.has(proposal.id) && (
+                        <span style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", color: T.success }}>Voted</span>
+                      )}
+                      <span style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", textTransform: "uppercase", letterSpacing: "0.12em", color: proposal.status === "OPEN" ? T.accent : T.mutedLo }}>
+                        {proposal.status}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
 
               {/* Vote panel */}
               <AnimatePresence>
@@ -396,27 +443,31 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
               <p style={{ fontSize: 11, fontFamily: "var(--font-geist-mono), monospace", textTransform: "uppercase", letterSpacing: "0.14em", color: T.mutedLo }}>
                 Live Tally
               </p>
-              {proposals.map((proposal) => (
-                <div key={proposal.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <p style={{ fontSize: 12, color: T.muted, lineHeight: 1.4 }}>
-                    {proposal.title.length > 36 ? proposal.title.slice(0, 36) + "..." : proposal.title}
-                  </p>
-                  <div style={{ display: "flex", gap: 24 }}>
-                    <div>
-                      <div style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: 28, color: T.success }}>
-                        {tally[proposal.id].yes}
+              {proposals.length === 0 ? (
+                <p style={{ fontSize: 12, color: T.mutedLo }}>No tallies to display.</p>
+              ) : (
+                proposals.map((proposal) => (
+                  <div key={proposal.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <p style={{ fontSize: 12, color: T.muted, lineHeight: 1.4 }}>
+                      {proposal.title.length > 36 ? proposal.title.slice(0, 36) + "..." : proposal.title}
+                    </p>
+                    <div style={{ display: "flex", gap: 24 }}>
+                      <div>
+                        <div style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: 28, color: T.success }}>
+                          {tally[proposal.id]?.yes ?? 0}
+                        </div>
+                        <div style={{ fontSize: 10, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, marginTop: 2 }}>YES</div>
                       </div>
-                      <div style={{ fontSize: 10, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, marginTop: 2 }}>YES</div>
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: 28, color: T.error }}>
-                        {tally[proposal.id].no}
+                      <div>
+                        <div style={{ fontFamily: "var(--font-geist-mono), monospace", fontSize: 28, color: T.error }}>
+                          {tally[proposal.id]?.no ?? 0}
+                        </div>
+                        <div style={{ fontSize: 10, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, marginTop: 2 }}>NO</div>
                       </div>
-                      <div style={{ fontSize: 10, fontFamily: "var(--font-geist-mono), monospace", color: T.mutedLo, marginTop: 2 }}>NO</div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
 
               {credentialNullifier && (
                 <div style={{ borderLeft: `2px solid ${T.accent}`, paddingLeft: 12 }}>

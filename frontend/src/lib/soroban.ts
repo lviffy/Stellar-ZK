@@ -1,4 +1,4 @@
-import { Contract, rpc, TransactionBuilder, Account, Operation, Networks, xdr, nativeToScVal } from "@stellar/stellar-sdk";
+import { Contract, rpc, TransactionBuilder, Account, Operation, Networks, xdr, nativeToScVal, scValToNative } from "@stellar/stellar-sdk";
 import { signTransaction } from "@stellar/freighter-api";
 import { SOROBAN_RPC_URL } from "./contracts";
 
@@ -101,3 +101,36 @@ function stellarPublicKeyToBytes(publicKey: string): Uint8Array {
   }
   return out;
 }
+
+export async function getTallyFromSoroban(
+  contractId: string,
+  proposalId: number
+): Promise<[number, number]> {
+  try {
+    const dummySource = "GCT5RCD76K6374I6I52A6SS6G56C4UPZ5W5W5W5W5W5W5W5W5W5W5W5W";
+    const account = new Account(dummySource, "0");
+    const contract = new Contract(contractId);
+    const operation = contract.call("get_tally", nativeToScVal(BigInt(proposalId)));
+
+    const tx = new TransactionBuilder(account, {
+      fee: "100",
+      networkPassphrase: Networks.TESTNET,
+    })
+      .addOperation(operation)
+      .setTimeout(30)
+      .build();
+
+    const response = await server.simulateTransaction(tx);
+    if (rpc.Api.isSimulationSuccess(response) && response.result?.retval) {
+      const val = scValToNative(response.result.retval);
+      if (Array.isArray(val) && val.length === 2) {
+        return [Number(val[0]), Number(val[1])];
+      }
+    }
+    return [0, 0];
+  } catch (err) {
+    console.error(`Failed to get tally for proposal ${proposalId}:`, err);
+    return [0, 0];
+  }
+}
+
