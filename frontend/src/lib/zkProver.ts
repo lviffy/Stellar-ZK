@@ -167,13 +167,15 @@ export async function proveVote(
     
     logs.push({ label: "circom", text: "Groth16 proof generated in browser" });
     
+    const toHex32 = (val: string) => "0x" + BigInt(val).toString(16).padStart(64, "0");
+
     const formattedProof: Groth16ProofType = {
-      a: [proof.pi_a[0], proof.pi_a[1]],
+      a: [toHex32(proof.pi_a[0]), toHex32(proof.pi_a[1])],
       b: [
-        [proof.pi_b[0][1], proof.pi_b[0][0]],
-        [proof.pi_b[1][1], proof.pi_b[1][0]]
+        [toHex32(proof.pi_b[0][1]), toHex32(proof.pi_b[0][0])],
+        [toHex32(proof.pi_b[1][1]), toHex32(proof.pi_b[1][0])]
       ],
-      c: [proof.pi_c[0], proof.pi_c[1]]
+      c: [toHex32(proof.pi_c[0]), toHex32(proof.pi_c[1])]
     };
     
     // Convert nullifiers to hex for downstream Soroban usage

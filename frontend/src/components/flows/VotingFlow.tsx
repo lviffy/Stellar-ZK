@@ -12,6 +12,7 @@ import { PRIVATE_GOVERNANCE_ID } from "@/lib/contracts";
 import { LogEntry } from "@/lib/types";
 
 import { useCredential } from "@/hooks/useCredential";
+import { xdr } from "@stellar/stellar-sdk";
 
 interface Props { credentialNullifier?: string | null; }
 
@@ -175,24 +176,56 @@ export default function VotingFlow({ credentialNullifier: propNullifier }: Props
     // Invoke Soroban vote
     setLogs((prev) => [...prev, { label: "soroban", text: "Broadcasting vote transaction to testnet..." }]);
     
+    // Explicitly construct XDR ScVal arguments to guarantee exact types expected by the contract
+    const proofScVal = xdr.ScVal.scvMap([
+      new xdr.ScMapEntry({
+        key: xdr.ScVal.scvSymbol("a"),
+        val: xdr.ScVal.scvBytes(Buffer.concat([
+          Buffer.from(result.proof.proof.a[0].replace("0x",""), "hex"),
+          Buffer.from(result.proof.proof.a[1].replace("0x",""), "hex")
+        ]))
+      }),
+      new xdr.ScMapEntry({
+        key: xdr.ScVal.scvSymbol("b"),
+        val: xdr.ScVal.scvBytes(Buffer.concat([
+          Buffer.from(result.proof.proof.b[0][1].replace("0x",""), "hex"),
+          Buffer.from(result.proof.proof.b[0][0].replace("0x",""), "hex"),
+          Buffer.from(result.proof.proof.b[1][1].replace("0x",""), "hex"),
+          Buffer.from(result.proof.proof.b[1][0].replace("0x",""), "hex")
+        ]))
+      }),
+      new xdr.ScMapEntry({
+        key: xdr.ScVal.scvSymbol("c"),
+        val: xdr.ScVal.scvBytes(Buffer.concat([
+          Buffer.from(result.proof.proof.c[0].replace("0x",""), "hex"),
+          Buffer.from(result.proof.proof.c[1].replace("0x",""), "hex")
+        ]))
+      })
+    ]);
+
+    const credentialNullifierScVal = xdr.ScVal.scvBytes(
+      Buffer.from(result.proof.publicInputs[0].replace("0x",""), "hex")
+    );
+
+    const proposalIdScVal = xdr.ScVal.scvU64(
+      xdr.Uint64.fromString(proposalNum.toString())
+    );
+
+    const voteChoiceScVal = xdr.ScVal.scvU32(choice === "yes" ? 1 : 0);
+
+    const votingNullifierScVal = xdr.ScVal.scvBytes(
+      Buffer.from(result.proof.publicInputs[3].replace("0x",""), "hex")
+    );
+
     const callResult = await invokeSorobanContract(
       PRIVATE_GOVERNANCE_ID,
       "vote",
       [
-        {
-          a: Buffer.concat([Buffer.from(result.proof.proof.a[0].replace("0x",""), "hex"), Buffer.from(result.proof.proof.a[1].replace("0x",""), "hex")]),
-          b: Buffer.concat([
-            Buffer.from(result.proof.proof.b[0][1].replace("0x",""), "hex"),
-            Buffer.from(result.proof.proof.b[0][0].replace("0x",""), "hex"),
-            Buffer.from(result.proof.proof.b[1][1].replace("0x",""), "hex"),
-            Buffer.from(result.proof.proof.b[1][0].replace("0x",""), "hex"),
-          ]),
-          c: Buffer.concat([Buffer.from(result.proof.proof.c[0].replace("0x",""), "hex"), Buffer.from(result.proof.proof.c[1].replace("0x",""), "hex")]),
-        },
-        Buffer.from(result.proof.publicInputs[0].replace("0x",""), "hex"), // credential_nullifier
-        proposalNum,
-        choice === "yes" ? 1n : 0n,
-        Buffer.from(result.proof.publicInputs[3].replace("0x",""), "hex") // voting_nullifier
+        proofScVal,
+        credentialNullifierScVal,
+        proposalIdScVal,
+        voteChoiceScVal,
+        votingNullifierScVal
       ],
       activeAddress
     );
