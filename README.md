@@ -20,6 +20,8 @@ Obscura is built to bridge the gap between powerful cryptographic building block
 
 The following diagram illustrates how the frontend, Freighter wallet, Soroban contracts, and various ZK verifiers interact:
 
+![System Architecture Overview](assets/overview.png)
+
 ```mermaid
 graph TD
     User([User / Employer]) -->|Interacts| Frontend[Next.js Frontend]
@@ -54,6 +56,8 @@ graph TD
 
 Allows a user to prove they meet eligibility requirements (e.g., age or minimum balance) without revealing their actual balance, age, or identity.
 
+![Flow 1 - ZK Credentials Sequence Diagram](assets/flow1_credentials.png)
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -76,6 +80,8 @@ sequenceDiagram
 ### Flow 2 — Shielded Payroll (RISC Zero + Noir)
 
 Allows employers to process a batch payroll CSV off-chain, prove compliance with budget limits and credentials on-chain, and allows employees to claim their salaries privately.
+
+![Flow 2 - Shielded Payroll Sequence Diagram](assets/flow2_payroll.png)
 
 ```mermaid
 sequenceDiagram
@@ -110,6 +116,8 @@ sequenceDiagram
 ### Flow 3 — Private DAO Voting (Circom Groth16)
 
 Enables voters to cast private, double-vote resistant ballots. Voters prove they possess a valid credential nullifier from Flow 1, and cast their choice (0/1) without exposing which option they voted for or who they are.
+
+![Flow 3 - Private DAO Voting Sequence Diagram](assets/flow3_voting.png)
 
 ```mermaid
 sequenceDiagram
